@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Absensi Karyawan</title>
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    document.getElementById("latitude").value = position.coords.latitude;
+                    document.getElementById("longitude").value = position.coords.longitude;
+                });
+            } else {
+                alert("Geolocation tidak didukung oleh browser ini.");
+            }
+        }
+        
+        function updateTime() {
+            let now = new Date();
+            document.getElementById("tanggal").value = now.toISOString().split('T')[0];
+            document.getElementById("waktu").value = now.toTimeString().split(' ')[0];
+        }
+        
+        function submitForm() {
+            let formData = new FormData(document.getElementById("absenForm"));
+            fetch('https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec', {
+                method: 'POST',
+                body: formData
+            }).then(response => response.json())
+            .then(data => alert("Data berhasil dikirim!"))
+            .catch(error => alert("Terjadi kesalahan."));
+        }
+    </script>
+</head>
+<body onload="getLocation(); updateTime();">
+    <h2>Absensi Karyawan</h2>
+    <form id="absenForm">
+        <label>Nama:</label>
+        <select name="nama">
+            <option>Staf 1</option>
+            <option>Staf 2</option>
+        </select><br>
+        
+        <label>Divisi:</label>
+        <select name="divisi">
+            <option>HRD</option>
+            <option>IT</option>
+        </select><br>
+        
+        <label>Check-in / Check-out:</label>
+        <select name="status">
+            <option>Check-in</option>
+            <option>Check-out</option>
+        </select><br>
+        
+        <label>Tanggal:</label>
+        <input type="text" id="tanggal" name="tanggal" readonly><br>
+        
+        <label>Waktu:</label>
+        <input type="text" id="waktu" name="waktu" readonly><br>
+        
+        <label>Latitude:</label>
+        <input type="text" id="latitude" name="latitude" readonly><br>
+        
+        <label>Longitude:</label>
+        <input type="text" id="longitude" name="longitude" readonly><br>
+        
+        <button type="button" onclick="submitForm()">Submit</button>
+    </form>
+</body>
+</html>
