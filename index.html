@@ -10,10 +10,20 @@
                 navigator.geolocation.getCurrentPosition(position => {
                     document.getElementById("latitude").value = position.coords.latitude;
                     document.getElementById("longitude").value = position.coords.longitude;
+                    getAddress(position.coords.latitude, position.coords.longitude);
                 });
             } else {
                 alert("Geolocation tidak didukung oleh browser ini.");
             }
+        }
+        
+        function getAddress(lat, lon) {
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("alamat").value = data.display_name;
+                })
+                .catch(error => console.error('Error:', error));
         }
         
         function updateTime() {
@@ -24,22 +34,12 @@
         
         function submitForm() {
             let formData = new FormData(document.getElementById("absenForm"));
-            fetch('YOUR_WEB_APP_URL', {
+            fetch('https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec', {
                 method: 'POST',
-                body: new URLSearchParams(formData)
-            }).then(response => response.text())
+                body: formData
+            }).then(response => response.json())
             .then(data => alert("Data berhasil dikirim!"))
-            .catch(error => alert("Terjadi kesalahan: " + error));
-        }
-        
-        function previewImage(event) {
-            let reader = new FileReader();
-            reader.onload = function() {
-                let output = document.getElementById('selfiePreview');
-                output.src = reader.result;
-                document.getElementById("selfieData").value = reader.result;
-            }
-            reader.readAsDataURL(event.target.files[0]);
+            .catch(error => alert("Terjadi kesalahan."));
         }
     </script>
 </head>
@@ -60,6 +60,7 @@
             <option>PELUMAS</option>
             <option>MERYSSPA</option>
             <option>NURIAMA</option>
+            <option>HEAD OFFICE</option>
         </select><br>
         
         <label>Check-in / Check-out:</label>
@@ -80,10 +81,8 @@
         <label>Longitude:</label>
         <input type="text" id="longitude" name="longitude" readonly><br>
         
-        <label>Ambil Selfie:</label>
-        <input type="file" accept="image/*" capture="user" onchange="previewImage(event)"><br>
-        <img id="selfiePreview" src="#" alt="Selfie Preview" width="150"><br>
-        <input type="hidden" id="selfieData" name="selfieData">
+        <label>Alamat:</label>
+        <input type="text" id="alamat" name="alamat" readonly><br>
         
         <button type="button" onclick="submitForm()">Submit</button>
     </form>
