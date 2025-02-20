@@ -4,6 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Absensi Karyawan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 400px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
     <script>
         function getLocation() {
             if (navigator.geolocation) {
@@ -44,42 +89,44 @@
     </script>
 </head>
 <body onload="getLocation(); updateTime();">
-    <h2>Absensi Karyawan</h2>
-    <form id="absenForm">
-        <label>Nama:</label>
-        <select name="nama">
-            <option>Staf 1</option>
-            <option>Staf 2</option>
-        </select><br>
-        
-        <label>Divisi:</label>
-        <select name="divisi">
-            <option>HRD</option>
-            <option>IT</option>
-        </select><br>
-        
-        <label>Check-in / Check-out:</label>
-        <select name="status">
-            <option>Check-in</option>
-            <option>Check-out</option>
-        </select><br>
-        
-        <label>Tanggal:</label>
-        <input type="text" id="tanggal" name="tanggal" readonly><br>
-        
-        <label>Waktu:</label>
-        <input type="text" id="waktu" name="waktu" readonly><br>
-        
-        <label>Latitude:</label>
-        <input type="text" id="latitude" name="latitude" readonly><br>
-        
-        <label>Longitude:</label>
-        <input type="text" id="longitude" name="longitude" readonly><br>
-        
-        <label>Alamat:</label>
-        <input type="text" id="alamat" name="alamat" readonly><br>
-        
-        <button type="button" onclick="submitForm()">Submit</button>
-    </form>
+    <div class="container">
+        <h2>Absensi Karyawan</h2>
+        <form id="absenForm">
+            <label>Nama:</label>
+            <select name="nama">
+                <option>Staf 1</option>
+                <option>Staf 2</option>
+            </select>
+            
+            <label>Divisi:</label>
+            <select name="divisi">
+                <option>HRD</option>
+                <option>IT</option>
+            </select>
+            
+            <label>Check-in / Check-out:</label>
+            <select name="status">
+                <option>Check-in</option>
+                <option>Check-out</option>
+            </select>
+            
+            <label>Tanggal:</label>
+            <input type="text" id="tanggal" name="tanggal" readonly>
+            
+            <label>Waktu:</label>
+            <input type="text" id="waktu" name="waktu" readonly>
+            
+            <label>Latitude:</label>
+            <input type="text" id="latitude" name="latitude" readonly>
+            
+            <label>Longitude:</label>
+            <input type="text" id="longitude" name="longitude" readonly>
+            
+            <label>Alamat:</label>
+            <input type="text" id="alamat" name="alamat" readonly>
+            
+            <button type="button" onclick="submitForm()">Submit</button>
+        </form>
+    </div>
 </body>
 </html>
