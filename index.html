@@ -48,6 +48,9 @@
         button:hover {
             background-color: #218838;
         }
+        #alamat {
+            height: 50px;
+        }
     </style>
     <script>
         function getLocation() {
@@ -77,6 +80,26 @@
             document.getElementById("waktu").value = now.toTimeString().split(' ')[0];
         }
         
+        function updateNama() {
+            let divisi = document.getElementById("divisi").value;
+            let namaSelect = document.getElementById("nama");
+            namaSelect.innerHTML = "";
+            
+            let namaOptions = {
+                "DIV. PELUMAS": ["IBNU", "SAHID", "NUROHMI", "DINA"],
+                "DIV. MERYSSPA": ["WAWAN", "HARI", "PUTRI", "NDARI"],
+                "DIV. NURIAMA": ["PAIMAN", "ENI", "LIS"]
+            };
+            
+            if (namaOptions[divisi]) {
+                namaOptions[divisi].forEach(nama => {
+                    let option = document.createElement("option");
+                    option.text = nama;
+                    namaSelect.add(option);
+                });
+            }
+        }
+        
         function submitForm() {
             let formData = new FormData(document.getElementById("absenForm"));
             fetch('https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec', {
@@ -92,16 +115,17 @@
     <div class="container">
         <h2>Absensi Karyawan</h2>
         <form id="absenForm">
-            <label>Nama:</label>
-            <select name="nama">
-                <option>Staf 1</option>
-                <option>Staf 2</option>
+            <label>Divisi:</label>
+            <select id="divisi" name="divisi" onchange="updateNama()">
+                <option value="">Pilih Divisi</option>
+                <option value="DIV. PELUMAS">DIV. PELUMAS</option>
+                <option value="DIV. MERYSSPA">DIV. MERYSSPA</option>
+                <option value="DIV. NURIAMA">DIV. NURIAMA</option>
             </select>
             
-            <label>Divisi:</label>
-            <select name="divisi">
-                <option>HRD</option>
-                <option>IT</option>
+            <label>Nama:</label>
+            <select id="nama" name="nama">
+                <option>Pilih Nama</option>
             </select>
             
             <label>Check-in / Check-out:</label>
