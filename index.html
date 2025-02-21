@@ -13,6 +13,7 @@
             align-items: center;
             height: 100vh;
             margin: 0;
+            overflow: auto; /* Memungkinkan scrolling */
         }
         .container {
             background: white;
@@ -21,6 +22,8 @@
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
             width: 90%;
             max-width: 400px;
+            max-height: 90vh; /* Agar form tidak melebihi layar */
+            overflow-y: auto; /* Tambahkan scrolling dalam form */
         }
         h2 {
             text-align: center;
@@ -48,14 +51,10 @@
         button:hover {
             background-color: #218838;
         }
-        #alamat {
-            height: 50px;
-        }
-        video, canvas {
-            display: block;
-            margin: 10px auto;
+        video {
             width: 100%;
-            max-width: 300px;
+            border-radius: 5px;
+            margin-top: 10px;
         }
     </style>
     <script>
@@ -85,50 +84,37 @@
             document.getElementById("tanggal").value = now.toISOString().split('T')[0];
             document.getElementById("waktu").value = now.toTimeString().split(' ')[0];
         }
-        
-        function updateNama() {
-            let divisi = document.getElementById("divisi").value;
-            let namaSelect = document.getElementById("nama");
-            namaSelect.innerHTML = "";
-            
-            let namaOptions = {
-                "DIV. PELUMAS": ["IBNU", "SAHID", "NUROHMI", "DINA"],
-                "DIV. MERYSSPA": ["WAWAN", "HARI", "PUTRI", "NDARI"],
-                "DIV. NURIAMA": ["PAIMAN", "ENI", "LIS"]
-            };
-            
-            if (namaOptions[divisi]) {
-                namaOptions[divisi].forEach(nama => {
-                    let option = document.createElement("option");
-                    option.text = nama;
-                    namaSelect.add(option);
-                });
-            }
-        }
-        
+
         function startCamera() {
             let video = document.getElementById("video");
             navigator.mediaDevices.getUserMedia({ video: true })
                 .then(stream => {
                     video.srcObject = stream;
                 })
-                .catch(error => console.error("Error accessing camera:", error));
+                .catch(error => {
+                    console.error("Error accessing camera:", error);
+                });
         }
 
         function capturePhoto() {
             let video = document.getElementById("video");
-            let canvas = document.getElementById("canvas");
-            let context = canvas.getContext("2d");
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-            document.getElementById("photoData").value = canvas.toDataURL("image/png");
+            let canvas = document.createElement("canvas");
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            let ctx = canvas.getContext("2d");
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            let photoData = canvas.toDataURL("image/png");
+            document.getElementById("photoData").value = photoData;
+            alert("Foto berhasil diambil!");
         }
-        
+
         function submitForm() {
             let formData = new FormData(document.getElementById("absenForm"));
-            fetch('https://script.google.com/macros/s/AKfycbwQPJmNt9xZh7WmdJ9DcuCTpcMz3WXmYt0GPLF46R_TIBAcA0xeksWIMO9bzTDOGJFz/exec', {
+
+            fetch('https://script.google.com/macros/s/AKfycbwQPJmNt9xZh7WmdJ9DcuCTpcMz3WXmYt0GPLF46R_TIBAcA0xeksWIMO9bzTDOGJFz/exec', { 
                 method: 'POST',
                 body: formData
-            }).then(response => response.json())
+            }).then(response => response.text())
             .then(data => alert("Data berhasil dikirim!"))
             .catch(error => alert("Terjadi kesalahan."));
         }
@@ -139,47 +125,68 @@
         <h2>Absensi Karyawan</h2>
         <form id="absenForm">
             <label>Divisi:</label>
-            <select id="divisi" name="divisi" onchange="updateNama()">
-                <option value="">Pilih Divisi</option>
-                <option value="DIV. PELUMAS">DIV. PELUMAS</option>
-                <option value="DIV. MERYSSPA">DIV. MERYSSPA</option>
-                <option value="DIV. NURIAMA">DIV. NURIAMA</option>
+            <select name="divisi" id="divisi" onchange="updateNama()">
+                <option value="PELUMAS">DIV. PELUMAS</option>
+                <option value="MERYSSPA">DIV. MERYSSPA</option>
+                <option value="NURIAMA">DIV. NURIAMA</option>
             </select>
-            
+
             <label>Nama:</label>
-            <select id="nama" name="nama">
-                <option>Pilih Nama</option>
+            <select name="nama" id="nama">
+                <!-- Nama akan otomatis berubah berdasarkan divisi -->
             </select>
-            
+
             <label>Check-in / Check-out:</label>
             <select name="status">
                 <option>Check-in</option>
                 <option>Check-out</option>
             </select>
-            
+
             <label>Tanggal:</label>
             <input type="text" id="tanggal" name="tanggal" readonly>
-            
+
             <label>Waktu:</label>
             <input type="text" id="waktu" name="waktu" readonly>
-            
+
             <label>Latitude:</label>
             <input type="text" id="latitude" name="latitude" readonly>
-            
+
             <label>Longitude:</label>
             <input type="text" id="longitude" name="longitude" readonly>
-            
+
             <label>Alamat:</label>
-            <input type="text" id="alamat" name="alamat" readonly>
-            
-            <label>Foto Selfie:</label>
+            <input type="text" id="alamat" name="alamat" readonly style="width: 100%; height: 50px;">
+
+            <label>Selfie:</label>
             <video id="video" autoplay></video>
             <button type="button" onclick="capturePhoto()">Ambil Foto</button>
-            <canvas id="canvas" hidden></canvas>
             <input type="hidden" id="photoData" name="photoData">
-            
+
             <button type="button" onclick="submitForm()">Submit</button>
         </form>
     </div>
+
+    <script>
+        function updateNama() {
+            let divisi = document.getElementById("divisi").value;
+            let namaSelect = document.getElementById("nama");
+            namaSelect.innerHTML = "";
+
+            let namaOptions = {
+                "PELUMAS": ["IBNU", "SAHID", "NUROHMI", "DINA"],
+                "MERYSSPA": ["WAWAN", "HARI", "PUTRI", "NDARI"],
+                "NURIAMA": ["PAIMAN", "ENI", "LIS"]
+            };
+
+            namaOptions[divisi].forEach(nama => {
+                let option = document.createElement("option");
+                option.value = nama;
+                option.textContent = nama;
+                namaSelect.appendChild(option);
+            });
+        }
+
+        updateNama(); // Set default nama berdasarkan divisi pertama
+    </script>
 </body>
 </html>
