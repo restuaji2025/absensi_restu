@@ -51,6 +51,12 @@
         #alamat {
             height: 50px;
         }
+        video, canvas {
+            display: block;
+            margin: 10px auto;
+            width: 100%;
+            max-width: 300px;
+        }
     </style>
     <script>
         function getLocation() {
@@ -100,6 +106,23 @@
             }
         }
         
+        function startCamera() {
+            let video = document.getElementById("video");
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    video.srcObject = stream;
+                })
+                .catch(error => console.error("Error accessing camera:", error));
+        }
+
+        function capturePhoto() {
+            let video = document.getElementById("video");
+            let canvas = document.getElementById("canvas");
+            let context = canvas.getContext("2d");
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            document.getElementById("photoData").value = canvas.toDataURL("image/png");
+        }
+        
         function submitForm() {
             let formData = new FormData(document.getElementById("absenForm"));
             fetch('https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec', {
@@ -111,7 +134,7 @@
         }
     </script>
 </head>
-<body onload="getLocation(); updateTime();">
+<body onload="getLocation(); updateTime(); startCamera();">
     <div class="container">
         <h2>Absensi Karyawan</h2>
         <form id="absenForm">
@@ -148,6 +171,12 @@
             
             <label>Alamat:</label>
             <input type="text" id="alamat" name="alamat" readonly>
+            
+            <label>Foto Selfie:</label>
+            <video id="video" autoplay></video>
+            <button type="button" onclick="capturePhoto()">Ambil Foto</button>
+            <canvas id="canvas" hidden></canvas>
+            <input type="hidden" id="photoData" name="photoData">
             
             <button type="button" onclick="submitForm()">Submit</button>
         </form>
