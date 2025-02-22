@@ -115,9 +115,9 @@ function submitForm() {
     console.log("Form Data akan dikirim:", Object.fromEntries(formData.entries())); // Debugging data
 
     fetch('https://script.google.com/macros/s/AKfycbzrgpVrceJOAeQXp3CetsR65NUbY7-Zav0y-qp4tK-mxPu888BgBeAMAVjpsNDc4hDA/exec', { 
-       method: 'POST',
-        body: formData,
-        mode: 'no-cors'  // Tambahkan ini
+        method: 'POST',
+    mode: 'no-cors',
+    body: formData  // Tambahkan ini
     })
     .then(response => response.text()) // Ambil respons sebagai teks
     .then(data => {
