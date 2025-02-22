@@ -108,23 +108,29 @@
             alert("Foto berhasil diambil!");
         }
 
-        function submitForm() {
-    let formData = new FormData(document.getElementById("absenabsenForm"));
+function submitForm() {
+    let form = document.getElementById("absenForm");
+    let formData = new FormData(form);
+
+    console.log("Form Data akan dikirim:", Object.fromEntries(formData.entries())); // Debugging data
 
     fetch('https://script.google.com/macros/s/AKfycbwQPJmNt9xZh7WmdJ9DcuCTpcMz3WXmYt0GPLF46R_TIBAcA0xeksWIMO9bzTDOGJFz/exec', { 
         method: 'POST',
         body: formData
     })
-    .then(response => response.text())  // Ubah response menjadi teks untuk debugging
+    .then(response => response.text()) // Ambil respons sebagai teks
     .then(data => {
-        console.log("Response dari server:", data); // Cek respons di console
+        console.log("Response dari server:", data); // Debugging response
         alert("Data berhasil dikirim!");
     })
     .catch(error => {
-        console.error("Error:", error); // Log error ke console
+        console.error("Error:", error); // Debugging error
         alert("Terjadi kesalahan, cek console untuk detail.");
     });
 }
+
+        
+        
     </script>
 </head>
 <body onload="getLocation(); updateTime(); startCamera();">
