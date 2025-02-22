@@ -114,8 +114,8 @@ function submitForm() {
 
     console.log("Form Data akan dikirim:", Object.fromEntries(formData.entries())); // Debugging data
 
-    fetch('https://script.google.com/macros/s/AKfycbwQPJmNt9xZh7WmdJ9DcuCTpcMz3WXmYt0GPLF46R_TIBAcA0xeksWIMO9bzTDOGJFz/exec', { 
-        method: 'POST',
+    fetch('https://script.google.com/macros/s/AKfycbwFtTFKxgjvEkspiSMSoRZ5i5OHUOewlERO42j95vzQAfsjcqIODU3r8vrlfGfRlXTx/exec', { 
+        method: 'no-cors',
         body: formData
     })
     .then(response => response.text()) // Ambil respons sebagai teks
